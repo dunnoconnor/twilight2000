@@ -1,10 +1,11 @@
 import Rating from "./Rating";
+import Skill from "./Skill";
 
 const attributeKey = {
-    "strength": ["heavy weapons", "close combat", "stamina"],
-    "agility": ["driving", "mobility", "ranged combat"],
-    "intelligence": ["recon", "survival", "tech"],
-    "empathy": ["command", "persuasion", "medical aid"],
+    "Strength": ["Heavy Weapons", "Close Combat", "Stamina"],
+    "Agility": ["Driving", "Mobility", "Ranged Combat"],
+    "Intelligence": ["Recon", "Survival", "Tech"],
+    "Empathy": ["Command", "Persuasion", "Medical Aid"],
 }
 
 function addSkills(name){
@@ -12,7 +13,7 @@ function addSkills(name){
     const skills = {};
     if (attributeKey[name]) {
         attributeKey[name].forEach(skill => {
-        skills[skill] = new Rating();
+        skills[skill] = new Skill(skill);
         });
     }
     return skills;

@@ -5,10 +5,10 @@ class Character {
 
     constructor() {
         this.attributes = {
-            strength: new Attribute("strength", "C"),
-            agility: new Attribute("agility", "C"),
-            intelligence: new Attribute("intelligence", "C"),
-            empathy: new Attribute("empathy", "C"),
+            strength: new Attribute("Strength", "C"),
+            agility: new Attribute("Agility", "C"),
+            intelligence: new Attribute("Intelligence", "C"),
+            empathy: new Attribute("Empathy", "C"),
         },
         this.specialties = [];
         this.hitCapacity = 0;
