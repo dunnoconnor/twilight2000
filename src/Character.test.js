@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import Character from './Character';
-import Attribute from './Attribute';
+import Attribute from './Attributes';
 import Rating from './Rating';
 
 describe('Character Class', () => {
