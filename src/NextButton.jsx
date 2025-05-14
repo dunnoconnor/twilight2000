@@ -4,49 +4,70 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import roll from './Roll';
+import roll from './roll';
 import PropTypes from 'prop-types';
 
-function NextButton({ attributes,setAttributes}) {
-    const [open, setOpen] = useState(false);
-    const [rollResult, setRollResult] = useState([0, 0]);
-    const [rollTotal, setRollTotal] = useState(0);
+function NextButton({ attributes, setAttributes }) {
+    const [state, setState] = useState({
+        open: false,
+        rollResult: [0, 0],
+        rollTotal: 0,
+    });
 
+    // Rolls attributes using the roll function
     function rollAttributes() {
-        const result = roll(2, 3);
-        setRollResult(result);
-        setRollTotal(result[0] + result[1]);
-        setOpen(true);
+        try {
+            const result = roll(2, 3); // Replace magic numbers with constants or props
+            setState({
+                ...state,
+                rollResult: result,
+                rollTotal: result[0] + result[1],
+                open: true,
+            });
+        } catch (error) {
+            console.error('Error rolling attributes:', error);
+        }
     }
+
+    // Handles attribute updates when a button is clicked
     function handleClick(attribute) {
-        setRollTotal(rollTotal - 1);
+        if (!attributes[attribute]?.stepUpDieSize || !attributes[attribute]?.stepUpLabel) {
+            console.warn(`Attribute ${attribute} is missing required methods.`);
+            return;
+        }
+
+        setState({
+            ...state,
+            rollTotal: state.rollTotal - 1,
+        });
+
         setAttributes({
             ...attributes,
             [attribute]: {
                 ...attributes[attribute],
                 dieSize: attributes[attribute].stepUpDieSize(attributes[attribute].dieSize),
-                label: attributes[attribute].stepUpLabel(attributes[attribute].dieSize)
-            }
+                label: attributes[attribute].stepUpLabel(attributes[attribute].dieSize),
+            },
         });
     }
 
     function handleClose() {
-        setOpen(false);
+        setState({ ...state, open: false });
     }
 
     return (
         <div>
             <Button variant="outlined" onClick={rollAttributes}>Roll Attributes</Button>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Roll Results</DialogTitle>
+            <Dialog open={state.open} onClose={handleClose} aria-labelledby="roll-results-dialog">
+                <DialogTitle id="roll-results-dialog">Roll Results</DialogTitle>
                 <DialogContent>
-                    <p>Roll Results: {rollResult.join(', ')}</p>
-                    <p>Total: {rollTotal}</p>
+                    <p>Roll Results: {state.rollResult.join(', ')}</p>
+                    <p>Total: {state.rollTotal}</p>
                     {Object.keys(attributes).map((attribute) => (
                         <Button
                             key={attribute}
                             variant="contained"
-                            disabled={attributes[attribute].label === "A" || rollTotal === 0}
+                            disabled={attributes[attribute].label === "A" || state.rollTotal === 0}
                             onClick={() => handleClick(attribute)}
                         >
                             + {attribute}
@@ -62,10 +83,18 @@ function NextButton({ attributes,setAttributes}) {
         </div>
     );
 }
+
 // Props Validation
 NextButton.propTypes = {
-    attributes: PropTypes.object.isRequired,
-    setAttributes: PropTypes.func.isRequired
-}
+    attributes: PropTypes.objectOf(
+        PropTypes.shape({
+            dieSize: PropTypes.number.isRequired,
+            label: PropTypes.string.isRequired,
+            stepUpDieSize: PropTypes.func.isRequired,
+            stepUpLabel: PropTypes.func.isRequired,
+        })
+    ).isRequired,
+    setAttributes: PropTypes.func.isRequired,
+};
 
 export default NextButton;

@@ -4,3 +4,4 @@ globs:
 alwaysApply: true
 ---
 Use React Functional Components
+Use vitest for testing

@@ -1,5 +1,12 @@
 // Rating is a new JS Class with the properties label and die size, along with the metods step up and step down
 
+/**
+ * Steps up the die size by a specific increment.
+ * If the die size is 0, it increases by 4. Otherwise, it increases by 2.
+ *
+ * @param {number} die - The current die size.
+ * @returns {number} - The new die size after stepping up.
+ */
 class Rating {
     dieSizes = {
         12:"A",
